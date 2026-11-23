@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NRI College | Student Dashboard - Karthikeya</title>
+  <!-- Google Fonts: Inter for crisp academic typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ==========================================================================
+       1. CSS VARIABLES & RESET
+       ========================================================================== */
+    :root {
+      --bg-main: #F4F7FB;
+      --bg-sidebar: #14213D;
+      --bg-sidebar-hover: #1E3159;
+      --primary: #2563EB;
+      --primary-light: #EFF6FF;
+      --primary-dark: #1D4ED8;
+      --bg-card: #FFFFFF;
+      --text-main: #1E293B;
+      --text-secondary: #64748B;
+      --border-color: #E2E8F0;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03);
+      --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --radius-sm: 6px;
+      --transition: all 0.25s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ==========================================================================
+       2. LAYOUT ARCHITECTURE (SIDEBAR + MAIN CONTENT)
+       ========================================================================== */
+    .dashboard-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar Styling */
+    .sidebar {
+      width: 260px;
+      background-color: var(--bg-sidebar);
+      color: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 100;
+      transition: var(--transition);
+    }
+
+    .sidebar-brand {
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), #60A5FA);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: #FFFFFF;
+      flex-shrink: 0;
+    }
+
+    .brand-text h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .brand-text span {
+      font-size: 0.75rem;
+      color: #94A3B8;
+      display: block;
+    }
+
+    .sidebar-nav {
+      padding: 1.25rem 0.85rem;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.75rem 1rem;
+      color: #CBD5E1;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border-radius: var(--radius-md);
+      transition: var(--transition);
+    }
+
+    .nav-link svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background-color: var(--primary);
+      color: #FFFFFF;
+      transform: translateX(4px);
+    }
+
+    .sidebar-footer {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.75rem;
+      color: #94A3B8;
+      text-align: center;
+    }
+
+    /* Main Wrapper */
+    .main-wrapper {
+      flex: 1;
+      margin-left: 260px;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    /* ==========================================================================
+       3. TOP NAVIGATION HEADER
+       ========================================================================== */
+    .top-navbar {
+      background-color: var(--bg-card);
+      height: 72px;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .welcome-area h1 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .welcome-area p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .demo-banner-pill {
+      background-color: #FEF3C7;
+      color: #B45309;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid #FDE68A;
+    }
+
+    .icon-btn {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: var(--transition);
+      border: 1px solid var(--border-color);
+    }
+
+    .icon-btn:hover {
+      background-color: var(--primary-light);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .notification-dot {
+      position: absolute;
+      top: 8px;
+      right: 9px;
+      width: 8px;
+      height: 8px;
+      background-color: var(--danger);
+      border-radius: 50%;
+      border: 2px solid #FFFFFF;
+    }
+
+    .top-profile-chip {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+      color: var(--text-main);
+      padding: 0.35rem 0.75rem 0.35rem 0.35rem;
+      border-radius: 999px;
+      background-color: var(--bg-main);
+      border: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+
+    .top-profile-chip:hover {
+      border-color: var(--primary);
+      background-color: var(--primary-light);
+    }
+
+    .mini-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: #FFFFFF;
+      font-weight: 600;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .top-profile-chip span {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       4. CONTENT AREA & REUSABLE CARDS
+       ========================================================================== */
+    .content-area {
+      padding: 2rem;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-title::before {
+      content: "";
+      display: inline-block;
+      width: 4px;
+      height: 20px;
+      background-color: var(--primary);
+      border-radius: 4px;
+    }
+
+    .sample-tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--primary);
+      background-color: var(--primary-light);
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+       5. STUDENT PROFILE SECTION
+       ========================================================================== */
+    .profile-card {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
+      border-left: 5px solid var(--primary);
+    }
+
+    .profile-avatar-box {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .profile-avatar-img {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #14213D, #2563EB);
+      color: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 4px solid #DBEAFE;
+      box-shadow: var(--shadow-md);
+    }
+
+    .profile-avatar-img span.initials {
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .profile-avatar-img span.photo-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+      opacity: 0.85;
+    }
+
+    .status-badge {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      background-color: var(--success);
+      color: #FFFFFF;
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      border: 2px solid #FFFFFF;
+    }
+
+    .profile-details {
+      flex: 1;
+    }
+
+    .profile-details h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.25rem;
+    }
+
+    .profile-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .profile-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+
+    .meta-item {
+      background-color: var(--bg-main);
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .meta-label {
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .meta-value {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    /* ==========================================================================
+       6. ATTENDANCE SECTION (CSS PROGRESS BARS)
+       ========================================================================== */
+    .attendance-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 1.5rem;
+    }
+
+    .overall-attendance-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: linear-gradient(145deg, #14213D, #1E3A8A);
+      color: #FFFFFF;
+    }
+
+    .overall-circle {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: conic-gradient(#60A5FA 0% 86%, rgba(255, 255, 255, 0.15) 86% 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .overall-circle-inner {
+      width: 102px;
+      height: 102px;
+      border-radius: 50%;
+      background-color: #14213D;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .overall-circle-inner strong {
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+
+    .overall-circle-inner span {
+      font-size: 0.7rem;
+      color: #93C5FD;
+    }
+
+    .overall-attendance-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .overall-attendance-card p {
+      font-size: 0.82rem;
+      color: #CBD5E1;
+    }
+
+    .subject-attendance-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.15rem;
+      justify-content: center;
+    }
+
+    .progress-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.4rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background-color: #E2E8F0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background-color: var(--primary);
+      animation: growBar 1.2s ease-out forwards;
+    }
+
+    .progress-fill.high { background-color: var(--success); }
+    .progress-fill.medium { background-color: var(--primary); }
+    .progress-fill.warning { background-color: var(--warning); }
+
+    @keyframes growBar {
+      from { width: 0; }
+    }
+
+    /* ==========================================================================
+       7. TABLES (MARKS & TIMETABLE)
+       ========================================================================== */
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      background-color: var(--bg-card);
+      font-size: 0.9rem;
+    }
+
+    thead {
+      background-color: #F8FAFC;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    th {
+      padding: 0.9rem 1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background-color: #F1F5F9;
+    }
+
+    .grade-pill {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      background-color: #DCFCE7;
+      color: #15803D;
+    }
+
+    .grade-pill.blue {
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+
+    /* Timetable Specific Styling */
+    .timetable-table th,
+    .timetable-table td {
+      text-align: center;
+      border-right: 1px solid var(--border-color);
+    }
+
+    .timetable-table th:first-child,
+    .timetable-table td:first-child {
+      text-align: left;
+      font-weight: 700;
+      background-color: #F8FAFC;
+      color: var(--bg-sidebar);
+    }
+
+    .break-cell {
+      background-color: #FEF3C7 !important;
+      color: #B45309 !important;
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+    }
+
+    .lab-badge {
+      display: inline-block;
+      background-color: var(--primary-light);
+      color: var(--primary);
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.82rem;
+    }
+
+    /* ==========================================================================
+       8. SUBJECTS GRID
+       ========================================================================== */
+    .subjects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .subject-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-top: 4px solid var(--primary);
+    }
+
+    .subject-code {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--primary);
+      background-color: var(--primary-light);
+      padding: 0.2rem 0.55rem;
+      border-radius: var(--radius-sm);
+      align-self: flex-start;
+      margin-bottom: 0.65rem;
+    }
+
+    .subject-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+
+    .subject-card p {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .subject-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border-color);
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* ==========================================================================
+       9. NOTIFICATIONS & ANNOUNCEMENTS (TWO-COLUMN SPLIT)
+       ========================================================================== */
+    .updates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feed-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .feed-item {
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      background-color: var(--bg-main);
+      border-left: 4px solid var(--primary);
+      transition: var(--transition);
+    }
+
+    .feed-item:hover {
+      background-color: var(--primary-light);
+    }
+
+    .feed-item.urgent {
+      border-left-color: var(--danger);
+    }
+
+    .feed-item.event {
+      border-left-color: var(--success);
+    }
+
+    .feed-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.3rem;
+      font-weight: 600;
+    }
+
+    .feed-item h4 {
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: var(--text-main);
+    }
+
+    .feed-item p {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+    }
+
+    /* ==========================================================================
+       10. FOOTER
+       ========================================================================== */
+    .dashboard-footer {
+      margin-top: auto;
+      background-color: var(--bg-card);
+      border-top: 1px solid var(--border-color);
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .dashboard-footer strong {
+      color: var(--text-main);
+    }
+
+    /* ==========================================================================
+       11. RESPONSIVE DESIGN (TABLETS & MOBILE)
+       ========================================================================== */
+    @media (max-width: 992px) {
+      .attendance-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+      }
+
+      .sidebar-nav {
+        padding: 0.75rem 1rem;
+      }
+
+      .nav-list {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+
+      .nav-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.82rem;
+      }
+
+      .nav-link:hover {
+        transform: none;
+      }
+
+      .sidebar-footer {
+        display: none;
+      }
+
+      .main-wrapper {
+        margin-left: 0;
+      }
+
+      .top-navbar {
+        padding: 0.75rem 1rem;
+        height: auto;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .demo-banner-pill {
+        display: none;
+      }
+
+      .content-area {
+        padding: 1.25rem 1rem;
+      }
+
+      .profile-card {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .updates-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-footer {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="dashboard-container">
+    <!-- ==================== 1. SIDEBAR NAVIGATION ==================== -->
+    <aside class="sidebar" aria-label="Primary Sidebar Navigation">
+      <div class="sidebar-brand">
+        <div class="brand-logo">NRI</div>
+        <div class="brand-text">
+          <h2>NRI Student Portal</h2>
+          <span>Academic ERP v1.0</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul class="nav-list">
+          <li>
+            <a href="#dashboard-top" class="nav-link active">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              Dashboard
+            </a>
+          </li>
+          <li>
+            <a href="#profile" class="nav-link">
+              <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              My Profile
+            </a>
+          </li>
+          <li>
+            <a href="#attendance" class="nav-link">
+              <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Attendance
+            </a>
+          </li>
+          <li>
+            <a href="#marks" class="nav-link">
+              <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              Marks
+            </a>
+          </li>
+          <li>
+            <a href="#timetable" class="nav-link">
+              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Timetable
+            </a>
+          </li>
+          <li>
+            <a href="#subjects" class="nav-link">
+              <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+              Subjects
+            </a>
+          </li>
+          <li>
+            <a href="#notifications" class="nav-link">
+              <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              Notifications
+            </a>
+          </li>
+          <li>
+            <a href="#announcements" class="nav-link">
+              <svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              Announcements
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        B.Tech CSE • Semester I<br>Academic Year 2026–27
+      </div>
+    </aside>
+
+    <!-- ==================== MAIN CONTENT WRAPPER ==================== -->
+    <div class="main-wrapper" id="dashboard-top">
+
+      <!-- ==================== 2. TOP NAVIGATION ==================== -->
+      <header class="top-navbar">
+        <div class="welcome-area">
+          <h1>Welcome back, Karthikeya!</h1>
+          <p>Here is your First Semester academic overview at NRI.</p>
+        </div>
+
+        <div class="top-actions">
+          <span class="demo-banner-pill">Sample / Demo Academic Data</span>
+
+          <a href="#notifications" class="icon-btn" title="View Notifications" aria-label="Notifications">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="notification-dot"></span>
+          </a>
+
+          <a href="#profile" class="top-profile-chip" title="View Student Profile">
+            <div class="mini-avatar">K</div>
+            <span>Karthikeya</span>
+          </a>
+        </div>
+      </header>
+
+      <!-- ==================== DASHBOARD SECTIONS ==================== -->
+      <main class="content-area">
+
+        <!-- ==================== 3. STUDENT PROFILE SECTION ==================== -->
+        <section id="profile" aria-labelledby="profile-heading">
+          <div class="section-header">
+            <h2 class="section-title" id="profile-heading">Student Profile</h2>
+            <span class="sample-tag">Student Identity</span>
+          </div>
+
+          <article class="card profile-card">
+            <div class="profile-avatar-box">
+              <!-- Clean CSS Profile Image Placeholder -->
+              <div class="profile-avatar-img" role="img" aria-label="Profile image placeholder for Karthikeya">
+                <span class="initials">K</span>
+                <span class="photo-label">Student ID</span>
+              </div>
+              <span class="status-badge">Active</span>
+            </div>
+
+            <div class="profile-details">
+              <h2>Karthikeya</h2>
+              <p class="profile-subtitle">Undergraduate Engineering Student • Roll No: 26NRI1A0501 (Sample)</p>
+
+              <div class="profile-meta-grid">
+                <div class="meta-item">
+                  <span class="meta-label">College</span>
+                  <span class="meta-value">NRI</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Department</span>
+                  <span class="meta-value">Computer Science and Engineering</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Course</span>
+                  <span class="meta-value">B.Tech</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Semester</span>
+                  <span class="meta-value">First Semester</span>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <!-- ==================== 4. ATTENDANCE SECTION ==================== -->
+        <section id="attendance" aria-labelledby="attendance-heading">
+          <div class="section-header">
+            <h2 class="section-title" id="attendance-heading">Attendance Overview</h2>
+            <span class="sample-tag">Sample Data</span>
+          </div>
+
+          <div class="attendance-grid">
+            <!-- Total Attendance Card -->
+            <article class="card overall-attendance-card">
+              <div class="overall-circle">
+                <div class="overall-circle-inner">
+                  <strong>86%</strong>
+                  <span>Overall</span>
+                </div>
+              </div>
+              <h3>Total Attendance</h3>
+              <p>172 of 200 Classes Attended<br>(Minimum Required: 75%)</p>
+            </article>
+
+            <!-- Subject-wise CSS Progress Bars Card -->
+            <article class="card subject-attendance-list">
+              <div class="progress-item">
+                <div class="progress-item-header">
+                  <span>Python Programming (CS101)</span>
+                  <span>92% (46/50)</span>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill high" style="width: 92%;"></div>
+                </div>
+              </div>
+
+              <div class="progress-item">
+                <div class="progress-item-header">
+                  <span>Web Development (CS102)</span>
+                  <span>88% (44/50)</span>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill high" style="width: 88%;"></div>
+                </div>
+              </div>
+
+              <div class="progress-item">
+                <div class="progress-item-header">
+                  <span>Engineering Mathematics – I (MA101)</span>
+                  <span>84% (42/50)</span>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill medium" style="width: 84%;"></div>
+                </div>
+              </div>
+
+              <div class="progress-item">
+                <div class="progress-item-header">
+                  <span>Digital Logic &amp; Computer Organization (EC101)</span>
+                  <span>80% (40/50)</span>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill warning" style="width: 80%;"></div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- ==================== 5. MARKS SECTION ==================== -->
+        <section id="marks" aria-labelledby="marks-heading">
+          <div class="section-header">
+            <h2 class="section-title" id="marks-heading">Internal Assessment Marks</h2>
+            <span class="sample-tag">Sample Data</span>
+          </div>
+
+          <div class="card">
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Subject Code</th>
+                    <th>Subject Name</th>
+                    <th>Internal Marks</th>
+                    <th>Maximum Marks</th>
+                    <th>Percentage</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>CS101</strong></td>
+                    <td>Python Programming</td>
+                    <td><strong>28</strong></td>
+                    <td>30</td>
+                    <td>93.3%</td>
+                    <td><span class="grade-pill">Excellent</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>CS102</strong></td>
+                    <td>Web Development (HTML5 &amp; CSS3)</td>
+                    <td><strong>27</strong></td>
+                    <td>30</td>
+                    <td>90.0%</td>
+                    <td><span class="grade-pill">Excellent</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>MA101</strong></td>
+                    <td>Engineering Mathematics – I</td>
+                    <td><strong>25</strong></td>
+                    <td>30</td>
+                    <td>83.3%</td>
+                    <td><span class="grade-pill blue">Very Good</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>EC101</strong></td>
+                    <td>Digital Logic &amp; Computer Organization</td>
+                    <td><strong>24</strong></td>
+                    <td>30</td>
+                    <td>80.0%</td>
+                    <td><span class="grade-pill blue">Very Good</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>HS101</strong></td>
+                    <td>Communicative English</td>
+                    <td><strong>26</strong></td>
+                    <td>30</td>
+                    <td>86.7%</td>
+                    <td><span class="grade-pill">Excellent</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== 6. TIMETABLE SECTION ==================== -->
+        <section id="timetable" aria-labelledby="timetable-heading">
+          <div class="section-header">
+            <h2 class="section-title" id="timetable-heading">Weekly Class Timetable (Monday – Saturday)</h2>
+            <span class="sample-tag">Sample Schedule</span>
+          </div>
+
+          <div class="card">
+            <div class="table-responsive">
+              <table class="timetable-table">
+                <thead>
+                  <tr>
+                    <th>Day</th>
+                    <th>09:00 – 10:00</th>
+                    <th>10:00 – 11:00</th>
+                    <th>11:00 – 11:15</th>
+                    <th>11:15 – 12:15</th>
+                    <th>12:15 – 01:15</th>
+                    <th>01:15 – 02:15</th>
+                    <th>02:15 – 04:15</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Monday</td>
+                    <td>Python Programming</td>
+                    <td>Mathematics – I</td>
+                    <td class="break-cell" rowspan="6">SHORT<br>BREAK</td>
+                    <td>Web Development</td>
+                    <td>Digital Logic</td>
+                    <td class="break-cell" rowspan="6">LUNCH<br>BREAK</td>
+                    <td><span class="lab-badge">Python Programming Lab</span></td>
+                  </tr>
+                  <tr>
+                    <td>Tuesday</td>
+                    <td>Mathematics – I</td>
+                    <td>Web Development</td>
+                    <td>Communicative English</td>
+                    <td>Python Programming</td>
+                    <td><span class="lab-badge">Web Development Lab</span></td>
+                  </tr>
+                  <tr>
+                    <td>Wednesday</td>
+                    <td>Digital Logic</td>
+                    <td>Python Programming</td>
+                    <td>Mathematics – I</td>
+                    <td>Web Development</td>
+                    <td>Library / Tutorial Hour</td>
+                  </tr>
+                  <tr>
+                    <td>Thursday</td>
+                    <td>Web Development</td>
+                    <td>Communicative English</td>
+                    <td>Python Programming</td>
+                    <td>Mathematics – I</td>
+                    <td><span class="lab-badge">Digital Logic Lab</span></td>
+                  </tr>
+                  <tr>
+                    <td>Friday</td>
+                    <td>Python Programming</td>
+                    <td>Digital Logic</td>
+                    <td>Web Development</td>
+                    <td>Communicative English</td>
+                    <td>Coding Club / Seminar</td>
+                  </tr>
+                  <tr>
+                    <td>Saturday</td>
+                    <td>Mathematics – I</td>
+                    <td>Python Programming</td>
+                    <td>Mentoring Session</td>
+                    <td>Sports &amp; Activities</td>
+                    <td>— Half Day —</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== 7. SUBJECTS SECTION ==================== -->
+        <section id="subjects" aria-labelledby="subjects-heading">
+          <div class="section-header">
+            <h2 class="section-title" id="subjects-heading">First Semester Subjects</h2>
+            <span class="sample-tag">CSE Curriculum</span>
+          </div>
+
+          <div class="subjects-grid">
+            <article class="card subject-card">
+              <div>
+                <span class="subject-code">CS101 • 4 Credits</span>
+                <h3>Python Programming</h3>
+                <p>Fundamentals of problem-solving, data types, control structures, functions, and file handling using Python.</p>
+              </div>
+              <div class="subject-footer">
+                <span>Faculty: Prof. R. Sharma</span>
+                <span>Core</span>
+              </div>
+            </article>
+
+            <article class="card subject-card">
+              <div>
+                <span class="subject-code">CS102 • 4 Credits</span>
+                <h3>Web Development</h3>
+                <p>Semantic HTML5 structure, modern CSS3 Flexbox &amp; Grid layouts, responsive design, and UI fundamentals.</p>
+              </div>
+              <div class="subject-footer">
+                <span>Faculty: Prof. A. Rao</span>
+                <span>Core</span>
+              </div>
+            </article>
+
+            <article class="card subject-card">
+              <div>
+                <span class="subject-code">MA101 • 4 Credits</span>
+                <h3>Mathematics</h3>
+                <p>Linear algebra, matrices, differential calculus, and multivariable calculus for computer science.</p>
+              </div>
+              <div class="subject-footer">
+                <span>Faculty: Dr. S. Nair</span>
+                <span>Foundation</span>
+              </div>
+            </article>
+
+            <article class="card subject-card">
+              <div>
+                <span class="subject-code">EC101 • 3 Credits</span>
+                <h3>Digital Logic Design</h3>
+                <p>Boolean algebra, logic gates, combinational &amp; sequential circuits, and basic computer architecture.</p>
+              </div>
+              <div class="subject-footer">
+                <span>Faculty: Prof. K. Verma</span>
+                <span>Allied</span>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- ==================== 8. NOTIFICATIONS & 9. ANNOUNCEMENTS ==================== -->
+        <div class="updates-grid">
+          <!-- 8. Notifications Section -->
+          <section id="notifications" aria-labelledby="notifications-heading">
+            <div class="section-header">
+              <h2 class="section-title" id="notifications-heading">Notifications</h2>
+              <span class="sample-tag">3 New</span>
+            </div>
+
+            <div class="card feed-list">
+              <article class="feed-item urgent">
+                <div class="feed-meta">
+                  <span>Assignment Reminder</span>
+                  <span>Due: Nov 28, 2026</span>
+                </div>
+                <h4>Web Development Mini Project Submission</h4>
+                <p>Submit your responsive HTML5 &amp; CSS3 Student Dashboard project folder before 5:00 PM.</p>
+              </article>
+
+              <article class="feed-item">
+                <div class="feed-meta">
+                  <span>Examination Update</span>
+                  <span>Dec 05, 2026</span>
+                </div>
+                <h4>First Semester Mid-Term Exam Schedule</h4>
+                <p>Internal Mid-II examination timetable has been published for B.Tech First Year CSE.</p>
+              </article>
+
+              <article class="feed-item">
+                <div class="feed-meta">
+                  <span>Academic Notification</span>
+                  <span>Nov 22, 2026</span>
+                </div>
+                <h4>Python Lab Record Verification</h4>
+                <p>Complete Programs 1 to 10 in your observation book for internal lab evaluation.</p>
+              </article>
+            </div>
+          </section>
+
+          <!-- 9. Announcements Section -->
+          <section id="announcements" aria-labelledby="announcements-heading">
+            <div class="section-header">
+              <h2 class="section-title" id="announcements-heading">College Announcements</h2>
+              <span class="sample-tag">NRI Campus</span>
+            </div>
+
+            <div class="card feed-list">
+              <article class="feed-item event">
+                <div class="feed-meta">
+                  <span>Upcoming Activity</span>
+                  <span>Dec 12, 2026</span>
+                </div>
+                <h4>NRI Annual TechFest &amp; Coding Hackathon</h4>
+                <p>Registrations are now open for First Semester CSE students to participate in the Web Design Sprint.</p>
+              </article>
+
+              <article class="feed-item">
+                <div class="feed-meta">
+                  <span>Academic Update</span>
+                  <span>Nov 20, 2026</span>
+                </div>
+                <h4>Central Library Extended Study Hours</h4>
+                <p>The digital and reference library will remain open until 8:00 PM ahead of semester examinations.</p>
+              </article>
+
+              <article class="feed-item">
+                <div class="feed-meta">
+                  <span>Campus Notice</span>
+                  <span>Nov 18, 2026</span>
+                </div>
+                <h4>Workshop on Git &amp; Open Source Basics</h4>
+                <p>Department of CSE is organizing a beginner hands-on session this Saturday in Seminar Hall B.</p>
+              </article>
+            </div>
+          </section>
+        </div>
+
+      </main>
+
+      <!-- ==================== 10. FOOTER ==================== -->
+      <footer class="dashboard-footer">
+        <div>
+          <strong>College Student Dashboard</strong> • Department of Computer Science and Engineering
+        </div>
+        <div>
+          <strong>NRI</strong> • &copy; 2026 All Rights Reserved (Sample Academic Project)
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+</body>
+</html>
